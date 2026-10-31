@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ curso.titulo }}</title>
+</head>
+<body>
+    <h1>{{ curso.titulo }}</h1>
+    <p><strong>Descripción:</strong> {{ curso.descripcion }}</p>
+    <p><strong>Profesor:</strong> {{ curso.profesor }}</p>
+
+    <h3>Estudiantes inscritos:</h3>
+    <ul>
+    {% for estudiante in curso.estudiantes.all %}
+        <li>{{ estudiante.nombre }} ({{ estudiante.email }})</li>
+    {% empty %}
+        <li>No hay estudiantes inscritos en este curso.</li>
+    {% endfor %}
+    </ul>
+
+    <a href="{% url 'web_lista_cursos' %}">← Volver a la lista de cursos</a>
+</body>
+</html>

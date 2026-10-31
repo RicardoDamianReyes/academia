@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ profesor.nombre }}</title>
+</head>
+<body>
+    <h1>{{ profesor.nombre }}</h1>
+    <p><strong>Correo:</strong> {{ profesor.email }}</p>
+
+    <h3>Cursos que imparte:</h3>
+    <ul>
+    {% for curso in profesor.cursos.all %}
+        <li>{{ curso.titulo }}</li>
+    {% empty %}
+        <li>Este profesor no tiene cursos asignados.</li>
+    {% endfor %}
+    </ul>
+
+    <a href="{% url 'lista_profesores' %}">← Volver a profesores</a>
+</body>
+</html>

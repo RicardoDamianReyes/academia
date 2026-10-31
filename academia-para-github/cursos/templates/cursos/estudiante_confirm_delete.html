@@ -1,0 +1,25 @@
+{% extends 'cursos/base.html' %}
+{% block title %}Eliminar Estudiante{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">¿Confirmar eliminación?</h4>
+            </div>
+            <div class="card-body">
+                <p class="fs-5">¿Seguro que deseas eliminar permanentemente al estudiante <strong>{{ estudiante.nombre }}</strong>?</p>
+                <p class="text-muted small">Esta acción no se puede deshacer y lo quitará de los cursos en los que está inscrito.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'web_lista_estudiantes' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-danger">Sí, Eliminar Registro</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

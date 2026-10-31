@@ -1,0 +1,24 @@
+{% extends 'cursos/base.html' %}
+{% block title %}{{ estudiante.nombre }}{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="card-title">{{ estudiante.nombre }}</h2>
+        <p class="text-muted">{{ estudiante.email }}</p>
+
+        <h5 class="mt-4">Cursos inscritos</h5>
+        <ul class="list-group mb-3">
+            {% for curso in estudiante.cursos.all %}
+                <li class="list-group-item">
+                    <a href="{% url 'web_detalle_curso' curso.pk %}">{{ curso.titulo }}</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">Aún no está inscrito en ningún curso.</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{% url 'web_lista_estudiantes' %}" class="btn btn-secondary">Volver al listado</a>
+    </div>
+</div>
+{% endblock %}

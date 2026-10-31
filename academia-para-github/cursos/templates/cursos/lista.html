@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo de Cursos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; background: #f4f6f8; }
+        h1 { color: #2c5282; margin: 0; }
+        .cabecera { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+        .tarjeta { background: #fff; border: 1px solid #d9dee3; border-radius: 10px;
+                   padding: 18px; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+        .tarjeta h3 { margin-top: 0; color: #2c5282; }
+        .acciones { margin-top: 14px; display: flex; gap: 8px; }
+        .btn { padding: 6px 12px; border-radius: 6px; text-decoration: none; border: none;
+               color: #fff; font-size: 14px; cursor: pointer; }
+        .ver { background: #2b6cb0; }
+        .editar { background: #d69e2e; }
+        .eliminar { background: #c53030; }
+        .nuevo { background: #2f855a; }
+        .salir { background: #718096; }
+    </style>
+</head>
+<body>
+    <div class="cabecera">
+        <h1>Catálogo de Cursos</h1>
+        <div>
+            {% if user.is_authenticated %}
+                <span>Hola, <strong>{{ user.username }}</strong></span>
+                <a href="{% url 'web_crear_curso' %}" class="btn nuevo">+ Nuevo Curso</a>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn salir">Cerrar Sesión</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn ver">Iniciar Sesión</a>
+            {% endif %}
+            <a href="{% url 'lista_profesores' %}" class="btn ver">Ver profesores</a>
+            <a href="{% url 'web_lista_estudiantes' %}" class="btn ver">Ver estudiantes</a>
+        </div>
+    </div>
+
+    <!-- BLOQUE DE MENSAJES FLASH -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+    <div class="grid">
+    {% for curso in cursos %}
+        <div class="tarjeta">
+            <h3>{{ curso.titulo }}</h3>
+            <p>{{ curso.descripcion }}</p>
+            <p><strong>Profesor:</strong> {{ curso.profesor }}</p>
+            <p><strong>Estudiantes inscritos:</strong> {{ curso.estudiantes.count }}</p>
+            <div class="acciones">
+                <a class="btn ver" href="{% url 'web_detalle_curso' curso.pk %}">Ver</a>
+                {% if user.is_authenticated %}
+                    <a class="btn editar" href="{% url 'web_editar_curso' curso.pk %}">Editar</a>
+                    <a class="btn eliminar btn-danger" href="{% url 'web_eliminar_curso' curso.pk %}">Eliminar</a>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay cursos registrados.</p>
+    {% endfor %}
+    </div>
+    <!-- COMPONENTE DE PAGINACIÓN -->
+{% if is_paginated %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+</body>
+</html>

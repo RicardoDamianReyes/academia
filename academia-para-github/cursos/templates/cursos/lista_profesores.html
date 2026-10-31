@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo de Profesores</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; background: #f4f6f8; }
+        h1 { color: #2c5282; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+        .tarjeta { background: #fff; border: 1px solid #d9dee3; border-radius: 10px;
+                   padding: 18px; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+        .tarjeta h3 { margin-top: 0; color: #2c5282; }
+        .btn { padding: 6px 12px; border-radius: 6px; text-decoration: none;
+               color: #fff; background: #2b6cb0; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Catálogo de Profesores</h1>
+    <p>Total de profesores disponibles: {{ page_obj.paginator.count }}</p>
+
+    <div class="grid">
+    {% for profesor in profesores %}
+        <div class="tarjeta">
+            <h3>{{ profesor.nombre }}</h3>
+            <p>{{ profesor.email }}</p>
+            <p><a class="btn" href="{% url 'web_detalle_profesor' profesor.pk %}">Ver detalle</a></p>
+        </div>
+    {% empty %}
+        <p>No hay profesores registrados.</p>
+    {% endfor %}
+    </div>
+
+    <!-- COMPONENTE DE PAGINACIÓN -->
+    {% if is_paginated %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    <p><a class="btn" href="{% url 'web_lista_cursos' %}">Volver al Catálogo de Cursos</a> <a class="btn" href="{% url 'web_lista_estudiantes' %}">Ver estudiantes</a></p>
+</body>
+</html>
